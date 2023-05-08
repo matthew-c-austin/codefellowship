@@ -11,6 +11,6 @@ The Code Fellowship application is a social application that allows users to vie
 
 ### App Use
 
-Follow the link to create an account and enter a username and password, you'll be redirected to your profile page and be automatically logged in. On the profile page create new posts that will be publicly viewable. View other member's posts following the `/profile/{id}` path.
+Follow the link to create an account and enter a username and password, you'll be redirected to your profile page and be automatically logged in.
 
 ## Features
