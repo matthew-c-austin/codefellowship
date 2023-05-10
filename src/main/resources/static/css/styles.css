@@ -20,6 +20,9 @@ form {
     align-items: center;
 }
 
+img {
+    margin-bottom: 1rem;
+}
 input[type="text"], input[type="password"], input[type="date"], textarea {
     margin-bottom: 1rem;
     padding: 0.5rem;
