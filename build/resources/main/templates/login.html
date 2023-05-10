@@ -12,6 +12,7 @@
 </header>
 <body>
 <h1>Login</h1>
+<div th:replace="/fragments/error :: applicationUser-error"></div>
 <form action="/login" method="POST">
     <label>Username</label>
     <input type="text" name="username">

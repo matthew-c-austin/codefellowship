@@ -11,6 +11,7 @@
 <header>
     <nav th:replace="fragments/navbar :: navbar"></nav>
 </header>
+<div th:replace="/fragments/error :: applicationUser-error"></div>
 <h1>Sign up!</h1>
 <form method="post" action="/signup">
     <label for="username">Username</label>

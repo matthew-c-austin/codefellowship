@@ -33,22 +33,22 @@
 
     <input type="submit" value="Save Changes">
 </form>
+<div class="vertical-gap-2"></div>
+<h2>Create Post</h2>
+<form action="/createPost" method="POST">
+    <input type="hidden" name="id" th:value="${user.id}">
+    <label>Post Body</label>
+    <textarea name="body" required></textarea>
+    <input type="submit" value="Create Post">
+</form>
+<div class="vertical-gap-2"></div>
+<h2>My Posts</h2>
+<article th:each="post : ${user.posts}">
+    <p class="date" th:text="${post.createdAt}"></p>
+    <div class="postcontent-container">
+        <p th:text="${post.body}"></p>
+    </div>
+</article>
 
-<!--<h2>My Posts</h2>-->
-<!--<div class="posts">-->
-<!--    <ul>-->
-<!--        <li th:each="post : ${user.posts}">-->
-<!--            <p th:text="${post.body}"></p>-->
-<!--            <p th:text="'Posted at: ' + ${post.createdAt}"></p>-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
-
-<!--<h2>Create Post</h2>-->
-<!--<form action="/createPost" method="POST">-->
-<!--    <label>Post Body</label>-->
-<!--    <textarea name="body" required></textarea>-->
-<!--    <input type="submit" value="Create Post">-->
-<!--</form>-->
 </body>
 </html>

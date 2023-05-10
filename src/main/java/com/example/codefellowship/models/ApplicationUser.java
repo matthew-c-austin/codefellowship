@@ -1,25 +1,27 @@
 package com.example.codefellowship.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class ApplicationUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @Column(unique=true)
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
     private String bio;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Post> posts;
 
     // Constructors
     public ApplicationUser() {}
@@ -59,6 +61,11 @@ public class ApplicationUser implements UserDetails {
         return true;
     }
 
+    // Methods
+    public void addPost(Post post) {
+        post.setApplicationUser(this);
+        posts.add(post);
+    }
 
     // Getters and Setters
     public long getId() {
@@ -117,5 +124,13 @@ public class ApplicationUser implements UserDetails {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }
