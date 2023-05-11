@@ -7,23 +7,23 @@
     <title>Login</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<header>
-    <nav th:replace="fragments/navbar :: navbar"></nav>
-</header>
 <body>
-<h1>Login</h1>
-<div th:replace="/fragments/error :: applicationUser-error"></div>
-<form action="/login" method="POST">
-    <label>Username</label>
-    <input type="text" name="username">
+    <header>
+        <nav th:replace="fragments/navbar :: navbar"></nav>
+    </header>
+    <h1>Login</h1>
+    <div th:replace="/fragments/error :: applicationUser-error"></div>
+    <form action="/login" method="POST">
+        <label>Username</label>
+        <input type="text" name="username">
 
-    <br>
-    <label>Password</label>
-    <input type="password" name="password">
+        <br>
+        <label>Password</label>
+        <input type="password" name="password">
 
-    <input type="submit" value="Login">
-</form>
-<p>Don't have an account? <a href="/signup">Sign up</a></p>
-<p class="logout-success" th:if="${param.logout}">You have successfully logged out.</p>
+        <input type="submit" value="Login">
+    </form>
+    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+    <p class="logout-success" th:if="${param.logout}">You have successfully logged out.</p>
 </body>
 </html>

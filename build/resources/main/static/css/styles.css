@@ -86,6 +86,11 @@ nav form {
 
 /* Posts */
 
+.posts-container {
+  width: 80%;
+  margin: 0 auto;
+}
+
 .date {
     font-size: 0.8em;
     color: #777;
@@ -108,4 +113,51 @@ nav form {
 /* Gap Element */
 .vertical-gap-2 {
     height: 2rem;
+}
+
+/* Table */
+.table-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+table {
+    border-collapse: collapse;
+    width: 80%;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #999;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #222;
+}
+
+tr:hover {
+    background-color: #444;
+}
+
+.follow-button {
+    background-color: #ea4444;
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.5rem 1.5rem;
+    text-transform: uppercase;
+}
+
+.follow-button:hover {
+    opacity: 0.8;
 }

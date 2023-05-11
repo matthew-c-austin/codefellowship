@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 public class ApplicationUser implements UserDetails {
@@ -22,6 +24,18 @@ public class ApplicationUser implements UserDetails {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Post> posts;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    private Set<ApplicationUser> followers = new HashSet<>();
+
+    @ManyToMany(mappedBy = "followers")
+    private Set<ApplicationUser> following = new HashSet<>();
+
 
     // Constructors
     public ApplicationUser() {}
@@ -65,6 +79,16 @@ public class ApplicationUser implements UserDetails {
     public void addPost(Post post) {
         post.setApplicationUser(this);
         posts.add(post);
+    }
+
+    public void follow(ApplicationUser userToFollow) {
+        following.add(userToFollow);
+        userToFollow.getFollowers().add(this);
+    }
+
+    public void unfollow(ApplicationUser userToUnfollow) {
+        following.remove(userToUnfollow);
+        userToUnfollow.getFollowers().remove(this);
     }
 
     // Getters and Setters
@@ -132,5 +156,13 @@ public class ApplicationUser implements UserDetails {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public Set<ApplicationUser> getFollowers() {
+        return followers;
+    }
+
+    public Set<ApplicationUser> getFollowing() {
+        return following;
     }
 }
