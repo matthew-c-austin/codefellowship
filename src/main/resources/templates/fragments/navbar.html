@@ -10,6 +10,7 @@
         <span th:if="${username}">
                 | <span class="username">Welcome, <span th:text="${username}"></span></span>
                 | <a href="/myprofile">My Profile</a>
+                | <a href="/users">Browse Users</a>
                 | <form action="/logout" method="post" style="display:inline;">
                     <input type="submit" value="Logout">
                 </form>

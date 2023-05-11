@@ -1,9 +1,7 @@
 package com.example.codefellowship.controllers;
 
 import com.example.codefellowship.models.ApplicationUser;
-import com.example.codefellowship.models.Post;
 import com.example.codefellowship.repos.ApplicationUserRepository;
-import com.example.codefellowship.repos.PostRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ApplicationUserController {
     @Autowired
     ApplicationUserRepository applicationUserRepository;
-    @Autowired
-    PostRepository postRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -36,14 +31,15 @@ public class ApplicationUserController {
     private HttpServletRequest request;
 
     @GetMapping("/")
-    public String getHomePage(Model m, Principal p) {
+    public RedirectView getHomePage(Model m, Principal p) {
         if (p != null) {
             String username = p.getName();
             ApplicationUser user = applicationUserRepository.findByUsername(username);
 
             m.addAttribute("username", username);
+            return new RedirectView("/feed");
         }
-        return "index.html";
+        return new RedirectView("/index");
     }
 
     @GetMapping("/login")
@@ -129,24 +125,25 @@ public class ApplicationUserController {
         return new RedirectView("/myprofile");
     }
 
-    @PostMapping("/createPost")
-    public RedirectView createPost(Principal p, String body,long id, RedirectAttributes redir) {
-        ApplicationUser user = applicationUserRepository.findById(id).orElseThrow();
-        if(p != null) { //not strictly needed if WebSecurityConfig is set up properly
-            Date date = new Date();
-            Post post = new Post(body, date);
-            user.addPost(post);
-            postRepository.save(post);
-            applicationUserRepository.save(user);
+    @GetMapping("/users")
+    public String getAllUsers(Model m, Principal p, RedirectAttributes redir) {
+        if(p != null) {
+            ApplicationUser currentUser = applicationUserRepository.findByUsername(p.getName());
+            List<ApplicationUser> users = applicationUserRepository.findAllByOrderByUsernameAsc();
+            m.addAttribute("currentUser", currentUser);
+            m.addAttribute("users", users);
+            return "users";
         } else {
-            redir.addFlashAttribute("errorMessage", "You are not permitted to add posts to this profile!");
+            redir.addFlashAttribute("errorMessage", "You must be logged in to view users!");
+            return "redirect:/login";
         }
-        return new RedirectView("/myprofile");
     }
 
     @GetMapping("/user/{id}")
     public String getUserInfoPage(Model m, Principal p, @PathVariable long id, RedirectAttributes redir) {
         if(p != null) {
+            ApplicationUser currentUser = applicationUserRepository.findByUsername(p.getName());
+            m.addAttribute("user", currentUser);
             ApplicationUser user = applicationUserRepository.findById(id).orElseThrow();
             m.addAttribute("user", user);
             return "profile";
@@ -156,4 +153,20 @@ public class ApplicationUserController {
         }
     }
 
+    @PutMapping("/follow/{id}")
+    public RedirectView followUser(Principal p, @PathVariable Long id, RedirectAttributes redir){
+        ApplicationUser currentUser = applicationUserRepository.findByUsername(p.getName());
+
+        // Check if the user is not trying to follow themselves
+        if (!(currentUser.getId() == id)) {
+            ApplicationUser userToFollow = applicationUserRepository.findById(id).orElseThrow(() -> new RuntimeException("Error reading " +
+                    "user from the database with ID of: " + id));
+            currentUser.follow(userToFollow);
+            applicationUserRepository.save(currentUser);
+        } else {
+            redir.addFlashAttribute("errorMessage", "You cannot follow yourself.");
+        }
+
+        return new RedirectView("/users");
+    }
 }
